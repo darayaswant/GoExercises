@@ -10,14 +10,8 @@ import (
 	"time"
 )
 
-//created marks and total as global variables, so that they can be accessed by all functions
-var marks, total int = 0, 0
-
-//creating channel
-var ch = make(chan int)
-
-func ask(records *[][]string) {
-	total = len(*records)
+func ask(records *[][]string, marks *int, total *int, ch chan int) {
+	*total = len(*records)
 
 	//asking questions one by one, and taking answers from user
 	for _, record := range *records {
@@ -28,7 +22,7 @@ func ask(records *[][]string) {
 		//TrimSpace because in records there can be trailing and leading spaces which combines take the string
 		//but while scanning the answer we won't consider spaces... so we trim the spaces from ans in record
 		if ans == strings.TrimSpace(record[1]) {
-			marks++
+			*marks++
 		}
 	}
 
@@ -63,12 +57,16 @@ func main() {
 		fmt.Println("error occured")
 	}
 
+	// creating variables for marks and total
+	var marks, total int = 0, 0
+	var ch = make(chan int)
+
 	//Alerting the user that the exam starts in one second
 	fmt.Println("Test starts in one second!!")
 	time.Sleep(time.Duration(1) * time.Second)
 
 	//started asking questions through ask function which is another go routine
-	go ask(&records)
+	go ask(&records, &marks, &total, ch)
 
 	//timer starts
 	timer := time.NewTimer(time.Duration(*timelimit) * time.Second)

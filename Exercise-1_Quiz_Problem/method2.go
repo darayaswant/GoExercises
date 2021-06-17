@@ -11,9 +11,11 @@ import (
 )
 
 //created marks and total as global variables, so that they can be accessed by all functions
-var marks, total int = 0, 0
 
 func ask(records *[][]string, t int) {
+	// creating variables for marks and total
+	var marks, total int = 0, 0
+
 	total = len(*records)
 	//timer starts
 	timer := time.NewTimer(time.Duration(t) * time.Second)
